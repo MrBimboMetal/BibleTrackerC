@@ -1639,17 +1639,27 @@ function renderizarPasajesFavoritos() {
     librosExistentes.forEach(function(libro) {
         let listaPasajesDelLibro = gruposPorLibro[libro];
         let idDropdownFav = 'fav-drop-' + libro.replace(/\s+/g, '-');
+        let idListaInterna = 'list-container-' + idDropdownFav; // Creamos una variable clara para la lista
+
         listaPasajesDelLibro.sort(function(a, b) {
             if (a.capitulo !== b.capitulo) return a.capitulo - b.capitulo;
             return a.versiculo - b.versiculo;
         });
+
         let dropdownDiv = document.createElement('div');
         dropdownDiv.className = 'fav-book-dropdown';
         dropdownDiv.id = idDropdownFav;
-        dropdownDiv.innerHTML = '<button class="fav-book-header" onclick="toggleDropdown(\'' + idDropdownFav + '\')"><span>📖 ' + libro + '</span><span style="font-size:0.72rem; background:var(--primary); color:white; padding:1px 5px; border-radius:10px; font-weight:bold; margin-right:10px;">' + listaPasajesDelLibro.length + '</span></button><div class="fav-book-list" id="list-container-' + idDropdownFav + '"></div>';
+        
+        // CORRECCIÓN AQUÍ: Ahora toggleDropdown recibe idListaInterna en lugar de idDropdownFav
+        dropdownDiv.innerHTML = '<button class="fav-book-header" onclick="toggleDropdown(\'' + idListaInterna + '\')"><span>📖 ' + libro + '</span><span style="font-size:0.72rem; background:var(--primary); color:white; padding:1px 5px; border-radius:10px; font-weight:bold; margin-right:10px;">' + listaPasajesDelLibro.length + '</span></button><div class="fav-book-list" id="' + idListaInterna + '"></div>';
+        
         panel.appendChild(dropdownDiv);
-        let contenedorListaInterna = document.getElementById('list-container-' + idDropdownFav);
+
+        // CORRECCIÓN AQUÍ: Usamos la nueva variable limpia para obtener el elemento
+        let contenedorListaInterna = document.getElementById(idListaInterna);
+        
         listaPasajesDelLibro.forEach(function(item) {
+
 			// Construir enlace a bdj.alpichel.com
 			let citaParaLink = item.citaUrl.trim();
 			

@@ -1949,35 +1949,48 @@ function lanzarNotificacionLogro(nombre) {
     setTimeout(() => { if (al.parentNode) al.parentNode.removeChild(al); }, 4000);
 }
 
+// Reemplaza toda la función generarResumenImprimible() por esta versión mejorada
 function generarResumenImprimible() {
     let cR = document.querySelectorAll('#lista-etapas-principales input:checked').length;
-
     let cS = 0;
     for (let i = 1; i <= 150; i++) {
         let cb = document.getElementById('check-salmo-' + i);
         if (cb && cb.checked) cS++;
     }
-
     let cP = 0;
     for (let i = 1; i <= 31; i++) {
         let cb = document.getElementById('check-prov-' + i);
         if (cb && cb.checked) cP++;
     }
-
     let cC = document.querySelectorAll('#lista-libros-complementarios input:checked').length;
-    let totG = cR + cS + cP + cC;
-    let pctG = Math.floor((totG / totalCapitulosGlobal) * 100);
-    let pctP = Math.floor(((cR + cS + cP) / totalPlanPrincipal) * 100);
 
-    let fechaInicio = document.getElementById('fecha-inicio-val').innerText;
-    let finPrincipal = document.getElementById('fecha-fin-principal-val').innerText;
-    let finGeneral = document.getElementById('fecha-fin-general-val').innerText;
-    let rachaActual = document.getElementById('racha-actual-val').innerText;
-    let rachaMax = document.getElementById('racha-max-val').innerText;
-    let diasTotales = document.getElementById('dias-totales-val').innerText;
+    // Contar SOLO los capítulos NO deuterocanónicos (protestante)
+    let cNonDeutero = 0;
+    for (let i = 1; i <= 422; i++) {
+        let cb = document.getElementById('check-comp-' + i);
+        if (cb && cb.checked) cNonDeutero++;
+    }
+    for (let i = 560; i <= totalCapitulosComp; i++) {
+        let cb = document.getElementById('check-comp-' + i);
+        if (cb && cb.checked) cNonDeutero++;
+    }
+
+    let totProtestante = cR + cS + cP + cNonDeutero;
+    let totCatolico   = cR + cS + cP + cC;
+
+    let pctCatolico   = totCatolico   >= totalCanonCatolico ? 100 : Math.floor(totCatolico   / totalCanonCatolico   * 100);
+    let pctProtestante= totProtestante>= totalCanonProtestante? 100 : Math.floor(totProtestante/ totalCanonProtestante* 100);
+    let pctPrincipal  = (cR + cS + cP) >= totalPlanPrincipal ? 100 : Math.floor((cR + cS + cP) / totalPlanPrincipal * 100);
+
+    let fechaInicio   = document.getElementById('fecha-inicio-val').innerText;
+    let finPrincipal  = document.getElementById('fecha-fin-principal-val').innerText;
+    let finGeneral    = document.getElementById('fecha-fin-general-val').innerText;
+    let rachaActual   = document.getElementById('racha-actual-val').innerText;
+    let rachaMax      = document.getElementById('racha-max-val').innerText;
+    let diasTotales   = document.getElementById('dias-totales-val').innerText;
 
     let logrosHTML = '';
-    document.querySelectorAll('.medalla-logro.desbloqueada').forEach(function(m) {
+    document.querySelectorAll('.medalla-logro.desbloqueada').forEach(m => {
         logrosHTML += '<span style="font-size:1.3rem; margin:2px;">' + m.innerText + '</span>';
     });
 
@@ -1986,18 +1999,17 @@ function generarResumenImprimible() {
         '<html><head><title>Resumen de Estudio Bíblico</title><style>' +
         'body{font-family:Segoe UI,sans-serif;padding:40px;color:#2c3e50;max-width:800px;margin:0 auto;}' +
         'h1{color:#2980b9;border-bottom:3px solid #2980b9;padding-bottom:10px;}' +
-        'h2{color:#27ae60;margin-top:30px;}.stat{margin:8px 0;font-size:1.1rem;}' +
+        'h2{color:#27ae60;margin-top:30px;}' +
+        '.stat{margin:8px 0;font-size:1.1rem;}' +
         '.logros{font-size:1.8rem;letter-spacing:4px;margin:15px 0;}' +
-        '@media print{button{display:none;}}</style></head><body>' +
+        '@media print{button{display:none;}}' +
+        '</style></head><body>' +
         '<h1>Resumen de Estudio Bíblico</h1>' +
         '<p><strong>Fecha del resumen:</strong> ' + new Date().toLocaleDateString('es-ES') + '</p>' +
         '<h2>Progreso General</h2>' +
-        '<div class="stat">Progreso General: <strong>' + pctG + '%</strong> (' + totG + ' / ' + totalCapitulosGlobal + ' capítulos)</div>' +
-        '<div class="stat">Plan Principal: <strong>' + pctP + '%</strong></div>' +
-        '<div class="stat">Base Doctrinal: ' + cR + ' / 537</div>' +
-        '<div class="stat">Salmos: ' + cS + ' / 150</div>' +
-        '<div class="stat">Proverbios: ' + cP + ' / 31</div>' +
-        '<div class="stat">Libros Adicionales: ' + cC + ' / 471</div>' +
+        '<div class="stat">Progreso General (Canón Católico): <strong>' + pctCatolico + '%</strong> (' + totCatolico + ' / ' + totalCanonCatolico + ' capítulos)</div>' +
+        '<div class="stat">Progreso Protestante: <strong>' + pctProtestante + '%</strong> (' + totProtestante + ' / ' + totalCanonProtestante + ' capítulos)</div>' +
+        '<div class="stat">Plan Principal: <strong>' + pctPrincipal + '%</strong> (' + (cR + cS + cP) + ' / ' + totalPlanPrincipal + ')</div>' +
         '<h2>Estadísticas</h2>' +
         '<div class="stat">Fecha de Inicio: ' + fechaInicio + '</div>' +
         '<div class="stat">Fin Plan Principal: ' + finPrincipal + '</div>' +

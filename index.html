@@ -245,6 +245,28 @@ body {
     color: #e74c3c;
     font-weight: bold;
 }
+.instrucciones-btn {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 130px !important;   /* Se coloca a la izquierda del botón debug */
+    background-color: #8e44ad;
+    color: white;
+    border: none;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50% !important;
+    cursor: pointer;
+    font-size: 1.2rem;
+    z-index: 2000 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.instrucciones-btn:hover {
+    background-color: #9b59b6;
+}
 @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
 @keyframes slideInUp { 0% { transform: translateY(50px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
 @keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; transform: translateY(-20px); } }
@@ -254,7 +276,7 @@ body {
 
 <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn">🌙</button>
 <button class="debug-btn" onclick="debugToggleTodo()" title="Debug: Alternar completar / desmarcar todo">🛠️</button>
-<button class="btn-herramienta" onclick="mostrarInstrucciones()" title="Ver instrucciones">❓ Instrucciones</button>
+<button class="instrucciones-btn" onclick="mostrarInstrucciones()" title="Ver instrucciones">❓</button>
 
 <div class="progress-container">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; font-weight: bold; gap: 20px;">

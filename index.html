@@ -13,6 +13,10 @@
     --primary-light: #ebf5fb;
     --accent: #27ae60;
     --border-color: #dcdde1;
+    /* Variables del mini-calendario */
+    --cal-bg-contenedor: #ffffff;
+    --cal-borde-contenedor: #dcdde1;
+    --cal-shadow: rgba(0,0,0,0.08);
 }
 [data-theme="dark"] {
     --bg-color: #1a1a1a;
@@ -22,6 +26,10 @@
     --primary-light: #2c3e50;
     --accent: #2ecc71;
     --border-color: #444444;
+    /* Variables del mini-calendario (modo oscuro) */
+    --cal-bg-contenedor: #2d2d2d;
+    --cal-borde-contenedor: #444444;
+    --cal-shadow: rgba(0,0,0,0.3);
 }
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -284,31 +292,39 @@ body {
             <span style="flex-shrink: 0; text-align: center;">Medallero de Logros</span>
             <div id="contenedor-medallas-logros" style="display: grid; grid-template-columns: repeat(23, 25px); gap: 10px 20px; align-items: center; justify-content: center; margin-top: 24px; width: fit-content;"></div>
         </div>
-        <div style="text-align: right; font-size: 0.85rem; line-height: 1.3; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end;">
-            <div style="font-weight: bold; font-size: 1.5rem; color: var(--accent); margin-bottom: 2px;">
-                Progreso General: <span id="porcentaje-general-val">0%</span>
-            </div>
-            <div style="margin-top: 30px; display: flex; flex-direction: column; align-items: flex-end;">
-                <div style="font-weight: bold; font-size: 0.9rem; color: #00b4d8; margin-bottom: 4px;">
-                    🎯 Plan Principal: <span id="porcentaje-principal-val">0%</span>
-                </div>
-                <div style="color: #7f8c8d;">
-                    Base Doctrinal: <span id="porcentaje-ruta-val" style="font-weight:bold; color:var(--primary);">0%</span> <span id="conteo-ruta-val">(0/537 caps)</span>
-                </div>
-                <div style="color: #7f8c8d;">
-                    Salmos + Proverbios: <span id="porcentaje-salmos-val" style="font-weight:bold; color:var(--primary);">0%</span> <span id="conteo-salmos-val">(0/181)</span>
-                </div>
-                <div style="color: #7f8c8d;">
-                    Libros Adicionales: <span id="porcentaje-comp-val" style="font-weight:bold; color:var(--primary);">0%</span> <span id="conteo-comp-val">(0/471 caps)</span>
-                </div>
-                <span id="notes-count-text" style="display: block; font-size: 0.8rem; color: #7f8c8d; font-weight: normal; margin-top: 30px;">0 bloques con notas</span>
-            </div>
-        </div>
+		<div style="text-align: right; font-size: 0.85rem; line-height: 1.3; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end;">
+			<div style="font-weight: bold; font-size: 1.35rem; color: var(--accent); margin-bottom: 2px;">
+				Canon Católico: <span id="porcentaje-general-val">0%</span>
+			</div>
+			<div style="font-weight: bold; font-size: 1.05rem; color: #9b59b6; margin-bottom: 6px;">
+				Canon Protestante: <span id="porcentaje-protestante-val">0%</span>
+			</div>
+			<div style="margin-top: 18px; display: flex; flex-direction: column; align-items: flex-end;">
+				<div style="font-weight: bold; font-size: 0.9rem; color: #00b4d8; margin-bottom: 4px;">
+					🎯 Plan Principal: <span id="porcentaje-principal-val">0%</span>
+				</div>
+				<div style="color: #7f8c8d;">
+					Base Doctrinal: <span id="porcentaje-ruta-val" style="font-weight:bold; color:var(--primary);">0%</span> <span id="conteo-ruta-val">(0/537 caps)</span>
+				</div>
+				<div style="color: #7f8c8d;">
+					Salmos + Proverbios: <span id="porcentaje-salmos-val" style="font-weight:bold; color:var(--primary);">0%</span> <span id="conteo-salmos-val">(0/181)</span>
+				</div>
+				<div style="color: #7f8c8d;">
+					Libros Adicionales: <span id="porcentaje-comp-val" style="font-weight:bold; color:var(--primary);">0%</span> <span id="conteo-comp-val">(0/608 caps)</span>
+				</div>
+				<span id="notes-count-text" style="display: block; font-size: 0.8rem; color: #7f8c8d; font-weight: normal; margin-top: 30px;">0 bloques con notas</span>
+			</div>
+		</div>
     </div>
-    <div class="progress-bar-bg" style="margin-top: 15px; position: relative; overflow: visible; background: #2c3e50; border-radius: 4px; height: 12px;">
+    <div class="progress-bar-bg" style="margin-top: 15px; position: relative; overflow: visible; background: #2c3e50; border-radius: 4px; height: 14px;">
+        <!-- Capa Plan Principal (celeste) - la más larga, va abajo -->
         <div id="progress-bar-principal" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: #00b4d8; border-radius: 4px; transition: width 0.3s ease; z-index: 1;"></div>
-        <div class="progress-bar" id="progress-bar" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; border-radius: 4px; transition: width 0.3s ease; z-index: 2;"></div>
-        <div id="progress-marker-principal" style="position: absolute; top: -3px; left: 0%; width: 3px; height: calc(100% + 6px); background-color: #e74c3c; box-shadow: 0 0 6px #e74c3c; transition: left 0.3s ease; z-index: 3; pointer-events: none; border-radius: 2px; display: none;"></div>
+        
+        <!-- Capa Protestante (violeta) -->
+        <div id="progress-bar-protestante" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: #9b59b6; border-radius: 4px; transition: width 0.3s ease; z-index: 2;"></div>
+        
+        <!-- Capa Católica / General (verde) - la más corta, va arriba -->
+        <div class="progress-bar" id="progress-bar" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: var(--accent); border-radius: 4px; transition: width 0.3s ease; z-index: 3;"></div>
     </div>
     <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 5px; margin-right: auto;">
@@ -494,9 +510,12 @@ const etapasRuta = etapas;
 const totalCapitulosRuta = 537;
 const totalSalmos = 150;
 const totalProverbios = 31;
-const totalCapitulosComp = 608;          // antes 471 (+137 de los deuterocanónicos)
-const totalCapitulosGlobal = 1326;       // antes 1189
-const totalPlanPrincipal = 718; // 537 + 150 + 31
+const totalCapitulosComp = 608;          // incluye deuterocanónicos
+const totalDeuterocanonicos = 137;
+const totalCanonProtestante = 1189;     // 1326 - 137
+const totalCanonCatolico = 1326;        // todo
+const totalCapitulosGlobal = totalCanonCatolico; // o 1326
+const totalPlanPrincipal = 718;
 
 let estadoAnteriorEtapas = {};
 let estadoAnteriorLibros = {};
@@ -1315,54 +1334,53 @@ function generarMiniCalendario(fechasEstudio) {
 }
 
 function actualizarProgreso() {
-    // Contar capítulos de Ruta Doctrinal
     let cR = document.querySelectorAll('#lista-etapas-principales input:checked').length;
 
-    // Contar Salmos (1 al 150)
     let cS = 0;
     for (let i = 1; i <= 150; i++) {
         let cb = document.getElementById('check-salmo-' + i);
         if (cb && cb.checked) cS++;
     }
 
-    // Contar Proverbios (1 al 31)
     let cP = 0;
     for (let i = 1; i <= 31; i++) {
         let cb = document.getElementById('check-prov-' + i);
         if (cb && cb.checked) cP++;
     }
 
-    // Contar Libros Complementarios
     let cC = document.querySelectorAll('#lista-libros-complementarios input:checked').length;
 
-    // Notas
-    let notas = 0;
-    for (let k in localStorage) {
-        if (k.startsWith('biblia_v4_block_notes_') && localStorage.getItem(k).trim()) notas++;
+    // Contar SOLO los capítulos NO deuterocanónicos de los complementarios
+    // Deuterocanónicos = índices 423 a 559 (ambos inclusive)
+    let cNonDeutero = 0;
+    for (let i = 1; i <= 422; i++) {
+        let cb = document.getElementById('check-comp-' + i);
+        if (cb && cb.checked) cNonDeutero++;
+    }
+    for (let i = 560; i <= totalCapitulosComp; i++) {
+        let cb = document.getElementById('check-comp-' + i);
+        if (cb && cb.checked) cNonDeutero++;
     }
 
-    let totP = cR + cS + cP;               // Plan Principal
-    let totG = cR + cS + cP + cC;          // Progreso General
+    let totProtestante = cR + cS + cP + cNonDeutero;
+    let totCatolico = cR + cS + cP + cC;
+    let totPrincipal = cR + cS + cP;
 
-    let pctG = totG >= totalCapitulosGlobal ? 100 : Math.floor(totG / totalCapitulosGlobal * 100);
-    let pctP = totP >= totalPlanPrincipal ? 100 : Math.floor(totP / totalPlanPrincipal * 100);
+    let pctCatolico = totCatolico >= totalCanonCatolico ? 100 : Math.floor(totCatolico / totalCanonCatolico * 100);
+    let pctProtestante = totProtestante >= totalCanonProtestante ? 100 : Math.floor(totProtestante / totalCanonProtestante * 100);
+    let pctP = totPrincipal >= totalPlanPrincipal ? 100 : Math.floor(totPrincipal / totalPlanPrincipal * 100);
     let pctR = cR >= totalCapitulosRuta ? 100 : Math.floor(cR / totalCapitulosRuta * 100);
     let pctSP = (cS + cP) >= 181 ? 100 : Math.floor((cS + cP) / 181 * 100);
     let pctC = cC >= totalCapitulosComp ? 100 : Math.floor(cC / totalCapitulosComp * 100);
 
-    // Barras de progreso
-    document.getElementById('progress-bar').style.width = pctG + '%';
-    let bc = document.getElementById('progress-bar-principal');
-    if (bc) bc.style.width = pctP + '%';
+    // Barras
+    document.getElementById('progress-bar').style.width = pctCatolico + '%';
+    document.getElementById('progress-bar-protestante').style.width = pctProtestante + '%';
+    document.getElementById('progress-bar-principal').style.width = pctP + '%';
 
-    let mk = document.getElementById('progress-marker-principal');
-    if (mk) {
-        mk.style.left = pctP + '%';
-        mk.style.display = (pctG >= pctP && pctP > 0) ? 'block' : 'none';
-    }
-
-    // Textos de la derecha
-    document.getElementById('porcentaje-general-val').innerText = pctG + '%';
+    // Textos
+    document.getElementById('porcentaje-general-val').innerText = pctCatolico + '%';
+    document.getElementById('porcentaje-protestante-val').innerText = pctProtestante + '%';
     document.getElementById('porcentaje-principal-val').innerText = pctP + '%';
     document.getElementById('porcentaje-ruta-val').innerText = pctR + '%';
     document.getElementById('conteo-ruta-val').innerText = '(' + cR + '/' + totalCapitulosRuta + ' caps)';
@@ -1370,6 +1388,11 @@ function actualizarProgreso() {
     document.getElementById('conteo-salmos-val').innerText = '(' + (cS + cP) + '/181)';
     document.getElementById('porcentaje-comp-val').innerText = pctC + '%';
     document.getElementById('conteo-comp-val').innerText = '(' + cC + '/' + totalCapitulosComp + ' caps)';
+
+    let notas = 0;
+    for (let k in localStorage) {
+        if (k.startsWith('biblia_v4_block_notes_') && localStorage.getItem(k).trim()) notas++;
+    }
     document.getElementById('notes-count-text').innerText = notas + (notas === 1 ? ' bloque con notas' : ' bloques con notas');
 
     actualizarFechasFin();
@@ -1767,7 +1790,7 @@ var iconosMedallas = {
     "2 Corintios":"✉️","Filipenses":"🎉","1 Tesalonicenses":"☁️","2 Tesalonicenses":"🛑","1 Timoteo":"🎓",
     "2 Timoteo":"🏁","Tito":"🎋","Filemón":"🤝","2 Pedro":"🔮","1 Juan":"💡","2 Juan":"🚶","3 Juan":"🎒",
 	"Tobías":"🐟","Judit":"🗡️","Sabiduría":"📖","Eclesiástico":"📿","Baruc":"📜","1 Macabeos":"🛡️","2 Macabeos":"⚔️",
-    "Preparado para el Bautismo": "🥉","Conocimiento Extendido": "🥈","Maestro de la Palabra del Señor": "🥇"
+    "Preparado para el Bautismo": "🥉","Conocimiento Extendido": "🥈","Maestro Protestante": "✝️","Maestro Católico Apostólico Romano": "⛪",
 };
 
 function tocarFanfarria() {
@@ -1844,19 +1867,48 @@ window.verificarYActualizarLogros = function() {
         procesar(lib.nombre, lib.capitulos, leidos === lib.capitulos && lib.capitulos > 0);
     }));
 
-    // Logros especiales
-    let capsPrincipal = 0;
-    for (let i = 1; i <= totalCapitulosRuta; i++) if (localStorage.getItem('biblia_v4_ruta_' + i) === 'true') capsPrincipal++;
-    for (let i = 1; i <= totalSalmos; i++) if (localStorage.getItem('biblia_v4_salmo_' + i) === 'true') capsPrincipal++;
-    for (let i = 1; i <= totalProverbios; i++) if (localStorage.getItem('biblia_v4_prov_' + i) === 'true') capsPrincipal++;
-    procesar("Preparado para el Bautismo", totalPlanPrincipal, capsPrincipal >= totalPlanPrincipal);
+    // ========== LOGROS ESPECIALES ==========
 
-    let capsComp = 0;
-    for (let i = 1; i <= totalCapitulosComp; i++) if (localStorage.getItem('biblia_v4_comp_' + i) === 'true') capsComp++;
-    procesar("Conocimiento Extendido", totalCapitulosComp, capsComp >= totalCapitulosComp);
+    // Contamos los capítulos marcados
+    let cR = document.querySelectorAll('#lista-etapas-principales input:checked').length;
 
-    let capsTotal = capsPrincipal + capsComp;
-    procesar("Maestro de la Palabra del Señor", totalCapitulosGlobal, capsTotal >= totalCapitulosGlobal);
+    let cS = 0;
+    for (let i = 1; i <= 150; i++) {
+        let cb = document.getElementById('check-salmo-' + i);
+        if (cb && cb.checked) cS++;
+    }
+
+    let cP = 0;
+    for (let i = 1; i <= 31; i++) {
+        let cb = document.getElementById('check-prov-' + i);
+        if (cb && cb.checked) cP++;
+    }
+
+    let cC = document.querySelectorAll('#lista-libros-complementarios input:checked').length;
+
+    // Contar SOLO los capítulos NO deuterocanónicos
+    let cNonDeutero = 0;
+    for (let i = 1; i <= 422; i++) {
+        let cb = document.getElementById('check-comp-' + i);
+        if (cb && cb.checked) cNonDeutero++;
+    }
+    for (let i = 560; i <= totalCapitulosComp; i++) {
+        let cb = document.getElementById('check-comp-' + i);
+        if (cb && cb.checked) cNonDeutero++;
+    }
+
+    // 1. Preparado para el Bautismo (100% Plan Principal)
+    procesar("Preparado para el Bautismo", totalPlanPrincipal, (cR + cS + cP) >= totalPlanPrincipal);
+
+    // 2. Conocimiento Extendido (100% Libros Restantes)
+    procesar("Conocimiento Extendido", totalCapitulosComp, cC >= totalCapitulosComp);
+
+    // 3. Maestro Protestante (todo excepto deuterocanónicos)
+    let totProtestanteLogro = cR + cS + cP + cNonDeutero;
+    procesar("Maestro Protestante", totalCanonProtestante, totProtestanteLogro >= totalCanonProtestante);
+
+    // 4. Maestro Católico Apostólico Romano (100% incluyendo deuterocanónicos)
+    procesar("Maestro Católico Apostólico Romano", totalCanonCatolico, (cR + cS + cP + cC) >= totalCanonCatolico);
 };
 
 function lanzarNotificacionLogro(nombre) {
@@ -1869,8 +1921,19 @@ function lanzarNotificacionLogro(nombre) {
 
 function generarResumenImprimible() {
     let cR = document.querySelectorAll('#lista-etapas-principales input:checked').length;
-    let cS = document.querySelectorAll('#contenedor-salmos input:checked').length;
-    let cP = document.querySelectorAll('#contenedor-proverbios input:checked').length;
+
+    let cS = 0;
+    for (let i = 1; i <= 150; i++) {
+        let cb = document.getElementById('check-salmo-' + i);
+        if (cb && cb.checked) cS++;
+    }
+
+    let cP = 0;
+    for (let i = 1; i <= 31; i++) {
+        let cb = document.getElementById('check-prov-' + i);
+        if (cb && cb.checked) cP++;
+    }
+
     let cC = document.querySelectorAll('#lista-libros-complementarios input:checked').length;
     let totG = cR + cS + cP + cC;
     let pctG = Math.floor((totG / totalCapitulosGlobal) * 100);

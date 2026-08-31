@@ -1376,7 +1376,26 @@ function renderizarPasajesFavoritos() {
         panel.appendChild(dropdownDiv);
         let contenedorListaInterna = document.getElementById('list-container-' + idDropdownFav);
         listaPasajesDelLibro.forEach(function(item) {
-            let urlFormateada = "https://biblegateway.com/passage/?search=" + encodeURIComponent(item.citaUrl) + "&version=RVR1960";
+            // Preparar la cita para el enlace
+			let citaParaLink = item.citaUrl;
+			
+			// Corrección especial para Tobías → Tobit
+			citaParaLink = citaParaLink.replace(/^Tobías\b/i, 'Tobit').replace(/^Tobias\b/i, 'Tobit');
+			
+			// Usar TLA para los libros deuterocanónicos, RVR1960 para el resto
+			const librosDeuterocanonicos = ['Tobit', 'Judit', 'Sabiduría', 'Eclesiástico', 'Baruc', '1 Macabeos', '2 Macabeos'];
+			let version = 'RVR1960';
+			
+			let primerPalabra = citaParaLink.split(' ')[0];
+			if (/^[1-2]$/.test(primerPalabra)) {
+			    primerPalabra = primerPalabra + ' ' + (citaParaLink.split(' ')[1] || '');
+			}
+			
+			if (librosDeuterocanonicos.some(libro => citaParaLink.toLowerCase().startsWith(libro.toLowerCase()))) {
+			    version = 'TLA';
+			}
+			
+			let urlFormateada = "https://biblegateway.com/passage/?search=" + encodeURIComponent(citaParaLink) + "&version=" + version;
             let itemDiv = document.createElement('div');
             itemDiv.className = 'favorite-item';
             itemDiv.style.flexDirection = 'column';

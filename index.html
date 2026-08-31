@@ -1561,16 +1561,33 @@ function borrarVersiculoFavorito(idx) {
     localStorage.setItem('biblia_v4_fav_list', JSON.stringify(favs));
     renderizarPasajesFavoritos();
 }
-function editarNotaPasaje(idx) {
-    let favs = JSON.parse(localStorage.getItem('biblia_v4_fav_list')||"[]");
-    if (idx<0 || idx>=favs.length) return;
-    let t = favs[idx].trim(), cita = t, com = "";
-    let m = t.match(/\(([^)]+)\)/);
-    if (m) { com = m[1].trim(); cita = t.replace(/\([^)]+\)/,"").trim(); }
-    let n = prompt("Comentario:", com);
-    if (n === null) return;
-    n = n.trim();
-    favs[idx] = n ? cita + " (" + n + ")" : cita;
+function editarPasajeFavorito(idx) {
+    let favs = JSON.parse(localStorage.getItem('biblia_v4_fav_list') || "[]");
+    if (idx < 0 || idx >= favs.length) return;
+
+    let textoActual = favs[idx];
+
+    let nuevoTexto = prompt(
+        "Editar pasaje completo:\n\nPodés corregir la cita y/o la nota.\nEjemplos:\n• Romanos 8:28\n• Juan 3:16-20 (Mi nota personal)",
+        textoActual
+    );
+
+    if (nuevoTexto === null) return; // Canceló
+
+    nuevoTexto = nuevoTexto.trim();
+    if (nuevoTexto === "") {
+        alert("El pasaje no puede quedar vacío.");
+        return;
+    }
+
+    // Evitar duplicados (si cambió a uno que ya existe)
+    let existe = favs.some((f, i) => i !== idx && f.trim().toLowerCase() === nuevoTexto.toLowerCase());
+    if (existe) {
+        alert("Ese pasaje ya está en tu cofre.");
+        return;
+    }
+
+    favs[idx] = nuevoTexto;
     localStorage.setItem('biblia_v4_fav_list', JSON.stringify(favs));
     renderizarPasajesFavoritos();
 }
@@ -1658,8 +1675,21 @@ function renderizarPasajesFavoritos() {
             itemDiv.style.flexDirection = 'column';
             itemDiv.style.alignItems = 'stretch';
             let bloqueNotaHtml = item.comentario !== "" ? '<div class="fav-comentario-line" style="font-size:0.74rem; color:#7f8c8d; font-style:italic; margin-top:3px; padding-top:2px; border-top:1px dashed rgba(0,0,0,0.05);">📝 ' + item.comentario + '</div>' : '';
-            itemDiv.innerHTML = '<div style="display:flex; justify-content:space-between; align-items:center; width:100%;"><div class="fav-text-line" style="font-weight:500; font-size:0.78rem;">📍 ' + item.citaUrl + '</div><div style="display:flex; gap:6px; flex-shrink:0; align-items:center;"><a href="' + urlFormateada + '" target="_blank" class="btn-bible-link" style="padding:1px 5px; font-size:0.68rem;">📖 Leer</a><button onclick="editarNotaPasaje(' + item.idxOriginal + ')" style="background:none; border:none; color:#f39c12; cursor:pointer; font-size:0.8rem; padding:0 2px;" title="Editar comentario">✏️</button><button onclick="borrarVersiculoFavorito(' + item.idxOriginal + ')" style="background:none; border:none; color:#e74c3c; cursor:pointer; font-weight:bold; font-size:0.8rem; padding:0 2px;">❌</button></div></div>' + bloqueNotaHtml;
-            contenedorListaInterna.appendChild(itemDiv);
+            
+            itemDiv.innerHTML = 
+                '<div style="display:flex; justify-content:space-between; align-items:center; width:100%;">' +
+                    '<div class="fav-text-line" style="font-weight:500; font-size:0.78rem; cursor:pointer; flex-grow:1;" ' +
+                         'onclick="editarPasajeFavorito(' + item.idxOriginal + ')" ' +
+                         'title="Clic para editar el pasaje">' +
+                        '📍 ' + item.citaUrl +
+                    '</div>' +
+                    '<div style="display:flex; gap:6px; flex-shrink:0; align-items:center;">' +
+                        '<a href="' + urlFormateada + '" target="_blank" class="btn-bible-link" style="padding:1px 5px; font-size:0.68rem;">📖 Leer</a>' +
+                        '<button onclick="editarPasajeFavorito(' + item.idxOriginal + ')" style="background:none; border:none; color:#f39c12; cursor:pointer; font-size:0.8rem; padding:0 2px;" title="Editar pasaje o nota">✏️</button>' +
+                        '<button onclick="borrarVersiculoFavorito(' + item.idxOriginal + ')" style="background:none; border:none; color:#e74c3c; cursor:pointer; font-weight:bold; font-size:0.8rem; padding:0 2px;">❌</button>' +
+                    '</div>' +
+                '</div>' + 
+                bloqueNotaHtml;            contenedorListaInterna.appendChild(itemDiv);
         });
     });
 }
@@ -2290,9 +2320,19 @@ document.getElementById('modal-instrucciones').addEventListener('click', functio
 function obtenerSlugLibro(nombreLibro) {
     if (!nombreLibro) return '';
 
-    let nombre = nombreLibro.trim();
+    // Función auxiliar para normalizar (minúsculas + sin tildes + sin espacios extras)
+    function normalizar(texto) {
+        return texto
+            .trim()
+            .replace(/\s+/g, ' ')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, ''); // quita tildes
+    }
 
-    // Mapa de casos especiales (prioridad alta)
+    let nombre = nombreLibro.trim().replace(/\s+/g, ' ');
+
+    // Mapa de casos especiales
     const especiales = {
         // Libros históricos numerados
         "1 Reyes": "primer_libro_de_los_reyes",
@@ -2316,36 +2356,39 @@ function obtenerSlugLibro(nombreLibro) {
         // Hechos
         "Hechos": "hechos_de_los_apostoles",
 
-        // Cartas a los Tesalonicenses y Corintios
+        // Cartas
         "1 Corintios": "primera_carta_a_los_corintios",
         "2 Corintios": "segunda_carta_a_los_corintios",
         "1 Tesalonicenses": "primera_carta_a_los_tesalonicenses",
         "2 Tesalonicenses": "segunda_carta_a_los_tesalonicenses",
-
-        // Timoteo
         "1 Timoteo": "primera_carta_a_timoteo",
         "2 Timoteo": "segunda_carta_a_timoteo",
-
-        // Pedro y Juan
         "1 Pedro": "primera_carta_de_pedro",
         "2 Pedro": "segunda_carta_de_pedro",
         "1 Juan": "primera_carta_de_juan",
         "2 Juan": "segunda_carta_de_juan",
         "3 Juan": "tercera_carta_de_juan",
 
-        // Otros casos útiles
+        // Otros
         "Tobías": "tobias",
         "Judit": "judit",
         "Sabiduría": "sabiduria",
         "Baruc": "baruc"
     };
 
-    // Si está en el mapa de especiales, lo usamos directamente
-    if (especiales[nombre]) {
-        return especiales[nombre];
+    // Creamos un mapa normalizado (sin tildes y en minúsculas)
+    const especialesNorm = {};
+    for (let key in especiales) {
+        especialesNorm[normalizar(key)] = especiales[key];
     }
 
-    // Regla general para otros libros numerados (1 Samuel, 2 Samuel, etc.)
+    // Buscamos con el nombre también normalizado
+    let nombreNorm = normalizar(nombre);
+    if (especialesNorm[nombreNorm]) {
+        return especialesNorm[nombreNorm];
+    }
+
+    // Regla general para libros numerados que no estén en el mapa
     let match = nombre.match(/^([123])\s+(.+)$/i);
     if (match) {
         const numero = match[1];
@@ -2360,11 +2403,8 @@ function obtenerSlugLibro(nombreLibro) {
         nombre = prefijos[numero] + resto;
     }
 
-    // Normalización final
-    return nombre
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')   // quitar tildes
+    // Normalización final del slug
+    return normalizar(nombre)
         .replace(/\s+/g, '_')
         .replace(/[^a-z0-9_]/g, '');
 }

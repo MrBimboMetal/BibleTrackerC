@@ -521,10 +521,17 @@ etapasRuta.forEach(function(etapa, eIdx) {
         let bookDiv = document.createElement('div');
         bookDiv.className = 'book-dropdown';
         let uniqueBookId = 'grid-book-' + libro.nombre.replace(/\s+/g, '-');
-        bookDiv.innerHTML = '<button class="book-header-btn" onclick="toggleDropdown(\'' + uniqueBookId + '\')">' +
-            '<span>📖 ' + libro.nombre + ' <span class="star-book" id="star-book-' + uniqueBookId + '" style="display:none;">✨</span></span>' +
-            '<span id="badge-' + uniqueBookId + '" style="font-size:0.75rem; background:var(--primary); color:white; padding:2px 6px; border-radius:10px;">0/' + libro.capitulos + '</span></button>' +
-            '<div class="chapters-grid" id="' + uniqueBookId + '"></div>';
+		bookDiv.innerHTML = 
+		    '<button class="book-header-btn" onclick="toggleDropdown(\'' + uniqueBookId + '\')">' +
+		        '<span>📖 ' + libro.nombre + ' <span class="star-book" id="star-book-' + uniqueBookId + '" style="display:none;">✨</span></span>' +
+		        '<div style="display:flex; align-items:center; gap:8px;">' +
+		            '<a href="https://bdj.alpichel.com/' + obtenerSlugLibro(libro.nombre) + '/1" target="_blank" ' +
+		               'onclick="event.stopPropagation();" ' +
+		               'class="btn-bible-link" style="padding:2px 8px; font-size:0.72rem; text-decoration:none;">Leer</a>' +
+		            '<span id="badge-' + uniqueBookId + '" style="font-size:0.75rem; background:var(--primary); color:white; padding:2px 6px; border-radius:10px;">0/' + libro.capitulos + '</span>' +
+		        '</div>' +
+		    '</button>' +
+		    '<div class="chapters-grid" id="' + uniqueBookId + '"></div>';
         subContenedor.appendChild(bookDiv);
         let gridContenedor = document.getElementById(uniqueBookId);
         for (let c = 1; c <= libro.capitulos; c++) {
@@ -543,93 +550,119 @@ etapasRuta.forEach(function(etapa, eIdx) {
 const contenedorCentro = document.getElementById('lista-salmos-independientes');
 contenedorCentro.innerHTML = '';
 
-// SALMOS
-let tituloSalmos = document.createElement('div');
-tituloSalmos.className = 'stage-title-box';
-tituloSalmos.id = 'psalms-header-0';
-tituloSalmos.innerHTML = '<span>SALMOS</span><span class="stage-books-counter">0 / 150</span>';
-tituloSalmos.style.cursor = 'pointer';
-contenedorCentro.appendChild(tituloSalmos);
+// Título de la etapa
+let boxTituloCentro = document.createElement('div');
+boxTituloCentro.className = 'stage-title-box';
+boxTituloCentro.id = 'stage-header-salmos-prov';
+boxTituloCentro.innerHTML = '<span>ETAPA TRANSVERSAL: SALMOS Y PROVERBIOS</span><span class="stage-books-counter">0 / 2</span>';
+contenedorCentro.appendChild(boxTituloCentro);
 
-let contSalmos = document.createElement('div');
-contSalmos.id = 'contenedor-salmos';
-contSalmos.style.display = 'none';
-contenedorCentro.appendChild(contSalmos);
+let subContenedorCentro = document.createElement('div');
+subContenedorCentro.id = 'stage-block-salmos-prov';
+subContenedorCentro.style.display = 'none';
+contenedorCentro.appendChild(subContenedorCentro);
 
-tituloSalmos.onclick = function() {
-    contSalmos.style.display = contSalmos.style.display === 'none' ? 'block' : 'none';
+boxTituloCentro.style.cursor = 'pointer';
+boxTituloCentro.onclick = function() {
+    subContenedorCentro.style.display = subContenedorCentro.style.display === 'none' ? 'block' : 'none';
 };
 
-for (let sStart = 1; sStart <= 150; sStart += 10) {
-    let sEnd = Math.min(sStart + 9, 150);
-    let uniqueId = 'grid-salmo-' + sStart;
-    let div = document.createElement('div');
-    div.className = 'book-dropdown';
-    div.innerHTML = 
-        '<div class="book-header-btn" onclick="if(!event.target.classList.contains(\'btn-bulk\')) toggleDropdown(\'' + uniqueId + '\')">' +
-            '<span style="flex-grow:1; margin-right:10px;">' + sStart + ' al ' + sEnd + '</span>' +
-            '<div style="display:flex; align-items:center; gap:6px; margin-right:35px;">' +
-                '<button class="btn-bulk" onclick="completarBloqueSalmosMasivo(' + sStart + ', ' + sEnd + ')" style="background:var(--accent); color:white; border:none; padding:3px 8px; border-radius:4px; font-size:0.72rem; cursor:pointer; font-weight:bold;">⚡ Todo</button>' +
-                '<span id="badge-' + uniqueId + '" style="font-size:0.72rem; background:var(--primary); color:white; padding:2px 6px; border-radius:10px; font-weight:bold;">0/10</span>' +
-            '</div>' +
+// ===== LIBRO: SALMOS (con 3 divisiones de 50) =====
+let salmosDiv = document.createElement('div');
+salmosDiv.className = 'book-dropdown';
+let uniqueSalmosId = 'grid-book-Salmos';
+
+salmosDiv.innerHTML = 
+    '<button class="book-header-btn" onclick="toggleDropdown(\'' + uniqueSalmosId + '\')">' +
+        '<span>📖 Salmos <span class="star-book" id="star-book-' + uniqueSalmosId + '" style="display:none;">✨</span></span>' +
+        '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<a href="https://bdj.alpichel.com/salmos/1" target="_blank" onclick="event.stopPropagation();" class="btn-bible-link" style="padding:2px 8px; font-size:0.72rem;">Leer</a>' +
+            '<span id="badge-' + uniqueSalmosId + '" style="font-size:0.75rem; background:var(--primary); color:white; padding:2px 6px; border-radius:10px;">0/150</span>' +
         '</div>' +
-        '<div class="chapters-grid" id="' + uniqueId + '"></div>';
-    contSalmos.appendChild(div);
-    let grid = document.getElementById(uniqueId);
-    for (let s = sStart; s <= sEnd; s++) {
+    '</button>' +
+    '<div class="chapters-grid" id="' + uniqueSalmosId + '" style="grid-template-columns: 1fr; gap: 12px; padding: 12px;"></div>';
+
+subContenedorCentro.appendChild(salmosDiv);
+
+let gridSalmos = document.getElementById(uniqueSalmosId);
+
+// Crear las 3 divisiones de 50 (ahora también desplegables)
+const gruposSalmos = [
+    { start: 1, end: 50, titulo: "Salmos 1 - 50" },
+    { start: 51, end: 100, titulo: "Salmos 51 - 100" },
+    { start: 101, end: 150, titulo: "Salmos 101 - 150" }
+];
+
+gruposSalmos.forEach(function(grupo, idx) {
+    let grupoId = 'salmos-grupo-' + grupo.start;
+
+    // Contenedor del grupo
+    let grupoContainer = document.createElement('div');
+    grupoContainer.style.cssText = 'border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 10px; overflow: hidden;';
+
+    // Cabecera del grupo (clickeable)
+    let grupoHeader = document.createElement('div');
+    grupoHeader.style.cssText = 'background: var(--primary-light); padding: 8px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 0.88rem;';
+    grupoHeader.innerHTML = '<span>' + grupo.titulo + '</span><span style="font-size:0.75rem;">▼</span>';
+    
+    // Grid de capítulos (empieza cerrado)
+    let grupoGrid = document.createElement('div');
+    grupoGrid.id = grupoId;
+    grupoGrid.style.cssText = 'display: none; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 6px; padding: 10px; background: var(--card-bg);';
+
+    // Evento para abrir/cerrar el grupo
+    grupoHeader.onclick = function(e) {
+        e.stopPropagation(); // Evita que se cierre el libro Salmos
+        if (grupoGrid.style.display === 'none') {
+            grupoGrid.style.display = 'grid';
+            this.querySelector('span:last-child').innerText = '▲';
+        } else {
+            grupoGrid.style.display = 'none';
+            this.querySelector('span:last-child').innerText = '▼';
+        }
+    };
+
+    // Crear los checkboxes
+    for (let s = grupo.start; s <= grupo.end; s++) {
         let celda = document.createElement('div');
         celda.className = 'chapter-cell';
         celda.id = 'salmo-row-' + s;
         celda.innerHTML = '<input type="checkbox" id="check-salmo-' + s + '" onclick="clickCasilla(\'salmo\', ' + s + ')">' +
                           '<span id="text-salmo-' + s + '">' + s + '</span>';
-        grid.appendChild(celda);
+        grupoGrid.appendChild(celda);
     }
-}
 
-// PROVERBIOS
-let tituloProv = document.createElement('div');
-tituloProv.className = 'stage-title-box';
-tituloProv.id = 'proverbios-header-0';
-tituloProv.style.marginTop = '15px';
-tituloProv.innerHTML = '<span>PROVERBIOS</span><span class="stage-books-counter">0 / 31</span>';
-tituloProv.style.cursor = 'pointer';
-contenedorCentro.appendChild(tituloProv);
-
-let contProv = document.createElement('div');
-contProv.id = 'contenedor-proverbios';
-contProv.style.display = 'none';
-contenedorCentro.appendChild(contProv);
-
-tituloProv.onclick = function() {
-    contProv.style.display = contProv.style.display === 'none' ? 'block' : 'none';
-};
-
-const gruposProv = [{start:1,end:10},{start:11,end:20},{start:21,end:31}];
-gruposProv.forEach(function(g) {
-    let uniqueId = 'grid-prov-' + g.start;
-    let cantidad = g.end - g.start + 1;
-    let div = document.createElement('div');
-    div.className = 'book-dropdown';
-    div.innerHTML = 
-        '<div class="book-header-btn" onclick="if(!event.target.classList.contains(\'btn-bulk\')) toggleDropdown(\'' + uniqueId + '\')">' +
-            '<span style="flex-grow:1; margin-right:10px;">' + g.start + ' al ' + g.end + '</span>' +
-            '<div style="display:flex; align-items:center; gap:6px; margin-right:35px;">' +
-                '<button class="btn-bulk" onclick="completarBloqueProverbiosMasivo(' + g.start + ', ' + g.end + ')" style="background:var(--accent); color:white; border:none; padding:3px 8px; border-radius:4px; font-size:0.72rem; cursor:pointer; font-weight:bold;">⚡ Todo</button>' +
-                '<span id="badge-' + uniqueId + '" style="font-size:0.72rem; background:var(--primary); color:white; padding:2px 6px; border-radius:10px; font-weight:bold;">0/' + cantidad + '</span>' +
-            '</div>' +
-        '</div>' +
-        '<div class="chapters-grid" id="' + uniqueId + '"></div>';
-    contProv.appendChild(div);
-    let grid = document.getElementById(uniqueId);
-    for (let p = g.start; p <= g.end; p++) {
-        let celda = document.createElement('div');
-        celda.className = 'chapter-cell';
-        celda.id = 'prov-row-' + p;
-        celda.innerHTML = '<input type="checkbox" id="check-prov-' + p + '" onclick="clickCasilla(\'prov\', ' + p + ')">' +
-                          '<span id="text-prov-' + p + '">' + p + '</span>';
-        grid.appendChild(celda);
-    }
+    grupoContainer.appendChild(grupoHeader);
+    grupoContainer.appendChild(grupoGrid);
+    gridSalmos.appendChild(grupoContainer);
 });
+
+// ===== LIBRO: PROVERBIOS =====
+let provDiv = document.createElement('div');
+provDiv.className = 'book-dropdown';
+let uniqueProvId = 'grid-book-Proverbios';
+
+provDiv.innerHTML = 
+    '<button class="book-header-btn" onclick="toggleDropdown(\'' + uniqueProvId + '\')">' +
+        '<span>📖 Proverbios <span class="star-book" id="star-book-' + uniqueProvId + '" style="display:none;">✨</span></span>' +
+        '<div style="display:flex; align-items:center; gap:8px;">' +
+            '<a href="https://bdj.alpichel.com/proverbios/1" target="_blank" onclick="event.stopPropagation();" class="btn-bible-link" style="padding:2px 8px; font-size:0.72rem;">Leer</a>' +
+            '<span id="badge-' + uniqueProvId + '" style="font-size:0.75rem; background:var(--primary); color:white; padding:2px 6px; border-radius:10px;">0/31</span>' +
+        '</div>' +
+    '</button>' +
+    '<div class="chapters-grid" id="' + uniqueProvId + '"></div>';
+
+subContenedorCentro.appendChild(provDiv);
+
+let gridProv = document.getElementById(uniqueProvId);
+for (let p = 1; p <= 31; p++) {
+    let celda = document.createElement('div');
+    celda.className = 'chapter-cell';
+    celda.id = 'prov-row-' + p;
+    celda.innerHTML = '<input type="checkbox" id="check-prov-' + p + '" onclick="clickCasilla(\'prov\', ' + p + ')">' +
+                      '<span id="text-prov-' + p + '">' + p + '</span>';
+    gridProv.appendChild(celda);
+}
 
 // LIBROS COMPLEMENTARIOS
 const contenedorComplementarios = document.getElementById('lista-libros-complementarios');
@@ -648,10 +681,17 @@ librosComplementarios.forEach(function(bloque, bIdx) {
         bookDiv.className = 'book-dropdown';
         let safeBookName = libro.nombre.replace(/[^a-zA-Z0-9]/g, '');
         let uniqueBookId = 'grid-comp-' + safeBookName;
-        bookDiv.innerHTML = '<button class="book-header-btn" onclick="toggleDropdown(\'' + uniqueBookId + '\')">' +
-            '<span>📖 ' + libro.nombre + ' <span class="star-book" id="star-book-' + uniqueBookId + '" style="display:none;">✨</span></span>' +
-            '<span id="badge-' + uniqueBookId + '" style="font-size:0.75rem; background:var(--primary); color:white; padding:2px 6px; border-radius:10px;">0/' + libro.capitulos + '</span></button>' +
-            '<div class="chapters-grid" id="' + uniqueBookId + '"></div>';
+		bookDiv.innerHTML = 
+		    '<button class="book-header-btn" onclick="toggleDropdown(\'' + uniqueBookId + '\')">' +
+		        '<span>📖 ' + libro.nombre + ' <span class="star-book" id="star-book-' + uniqueBookId + '" style="display:none;">✨</span></span>' +
+		        '<div style="display:flex; align-items:center; gap:8px;">' +
+		            '<a href="https://bdj.alpichel.com/' + obtenerSlugLibro(libro.nombre) + '/1" target="_blank" ' +
+		               'onclick="event.stopPropagation();" ' +
+		               'class="btn-bible-link" style="padding:2px 8px; font-size:0.72rem; text-decoration:none;">Leer</a>' +
+		            '<span id="badge-' + uniqueBookId + '" style="font-size:0.75rem; background:var(--primary); color:white; padding:2px 6px; border-radius:10px;">0/' + libro.capitulos + '</span>' +
+		        '</div>' +
+		    '</button>' +
+		    '<div class="chapters-grid" id="' + uniqueBookId + '"></div>';
         subContenedor.appendChild(bookDiv);
         let gridContenedor = document.getElementById(uniqueBookId);
         for (let c = 1; c <= libro.capitulos; c++) {
@@ -845,7 +885,16 @@ function completarBloqueProverbiosMasivo(start, end) {
 
 function toggleDropdown(id) {
     let el = document.getElementById(id);
-    if (el) el.classList.toggle('open');
+    if (!el) return;
+
+    el.classList.toggle('open');
+
+    // Asegurar que se muestre correctamente
+    if (el.classList.contains('open')) {
+        el.style.display = el.style.gridTemplateColumns === '1fr' ? 'block' : 'grid';
+    } else {
+        el.style.display = 'none';
+    }
 }
 
 function guardarNotasBloque(fecha) {
@@ -1269,40 +1318,63 @@ function generarMiniCalendario(fechasEstudio) {
 }
 
 function actualizarProgreso() {
+    // Contar capítulos de Ruta Doctrinal
     let cR = document.querySelectorAll('#lista-etapas-principales input:checked').length;
-    let cS = document.querySelectorAll('#contenedor-salmos input:checked').length;
-    let cP = document.querySelectorAll('#contenedor-proverbios input:checked').length;
+
+    // Contar Salmos (1 al 150)
+    let cS = 0;
+    for (let i = 1; i <= 150; i++) {
+        let cb = document.getElementById('check-salmo-' + i);
+        if (cb && cb.checked) cS++;
+    }
+
+    // Contar Proverbios (1 al 31)
+    let cP = 0;
+    for (let i = 1; i <= 31; i++) {
+        let cb = document.getElementById('check-prov-' + i);
+        if (cb && cb.checked) cP++;
+    }
+
+    // Contar Libros Complementarios
     let cC = document.querySelectorAll('#lista-libros-complementarios input:checked').length;
-    
+
+    // Notas
     let notas = 0;
-    for (let k in localStorage) if (k.startsWith('biblia_v4_block_notes_') && localStorage.getItem(k).trim()) notas++;
-    
-    let totP = cR + cS + cP;
-    let totG = cR + cS + cP + cC;
-    
+    for (let k in localStorage) {
+        if (k.startsWith('biblia_v4_block_notes_') && localStorage.getItem(k).trim()) notas++;
+    }
+
+    let totP = cR + cS + cP;               // Plan Principal
+    let totG = cR + cS + cP + cC;          // Progreso General
+
     let pctG = totG >= totalCapitulosGlobal ? 100 : Math.floor(totG / totalCapitulosGlobal * 100);
     let pctP = totP >= totalPlanPrincipal ? 100 : Math.floor(totP / totalPlanPrincipal * 100);
     let pctR = cR >= totalCapitulosRuta ? 100 : Math.floor(cR / totalCapitulosRuta * 100);
     let pctSP = (cS + cP) >= 181 ? 100 : Math.floor((cS + cP) / 181 * 100);
     let pctC = cC >= totalCapitulosComp ? 100 : Math.floor(cC / totalCapitulosComp * 100);
 
+    // Barras de progreso
     document.getElementById('progress-bar').style.width = pctG + '%';
     let bc = document.getElementById('progress-bar-principal');
     if (bc) bc.style.width = pctP + '%';
+
     let mk = document.getElementById('progress-marker-principal');
     if (mk) {
         mk.style.left = pctP + '%';
         mk.style.display = (pctG >= pctP && pctP > 0) ? 'block' : 'none';
     }
+
+    // Textos de la derecha
     document.getElementById('porcentaje-general-val').innerText = pctG + '%';
     document.getElementById('porcentaje-principal-val').innerText = pctP + '%';
     document.getElementById('porcentaje-ruta-val').innerText = pctR + '%';
-    document.getElementById('conteo-ruta-val').innerText = '('+cR+'/'+totalCapitulosRuta+' caps)';
+    document.getElementById('conteo-ruta-val').innerText = '(' + cR + '/' + totalCapitulosRuta + ' caps)';
     document.getElementById('porcentaje-salmos-val').innerText = pctSP + '%';
-    document.getElementById('conteo-salmos-val').innerText = '('+(cS+cP)+'/181)';
+    document.getElementById('conteo-salmos-val').innerText = '(' + (cS + cP) + '/181)';
     document.getElementById('porcentaje-comp-val').innerText = pctC + '%';
-    document.getElementById('conteo-comp-val').innerText = '('+cC+'/'+totalCapitulosComp+' caps)';
-    document.getElementById('notes-count-text').innerText = notas + (notas===1?' bloque con notas':' bloques con notas');
+    document.getElementById('conteo-comp-val').innerText = '(' + cC + '/' + totalCapitulosComp + ' caps)';
+    document.getElementById('notes-count-text').innerText = notas + (notas === 1 ? ' bloque con notas' : ' bloques con notas');
+
     actualizarFechasFin();
 }
 
@@ -1364,28 +1436,56 @@ function actualizarContadoresInsignias() {
         }
     }));
 
-    // Salmos
-    for (let s = 1; s <= 150; s += 10) {
-        let id = 'grid-salmo-' + s;
-        let g = document.getElementById(id);
-        if (g) {
-            let ch = g.querySelectorAll('input:checked').length;
-            let b = document.getElementById('badge-' + id);
-            if (b) b.innerText = ch + '/10';
-        }
-    }
+	// ===== SALMOS (un solo libro de 150) =====
+	let idSalmos = 'grid-book-Salmos';
+	let gSalmos = document.getElementById(idSalmos);
+	if (gSalmos) {
+		// Contamos todos los checkboxes de salmos que existan en el documento
+		let ch = 0;
+		for (let i = 1; i <= 150; i++) {
+			let cb = document.getElementById('check-salmo-' + i);
+			if (cb && cb.checked) ch++;
+		}
 
-    // Proverbios
-    [{start:1,end:10},{start:11,end:20},{start:21,end:31}].forEach(function(grupo) {
-        let id = 'grid-prov-' + grupo.start;
-        let g = document.getElementById(id);
-        if (g) {
-            let ch = g.querySelectorAll('input:checked').length;
-            let cantidad = grupo.end - grupo.start + 1;
-            let b = document.getElementById('badge-' + id);
-            if (b) b.innerText = ch + '/' + cantidad;
-        }
-    });
+		let b = document.getElementById('badge-' + idSalmos);
+		if (b) b.innerText = ch + '/150';
+
+		let star = document.getElementById('star-book-' + idSalmos);
+		let estaCompleto = (ch === 150);
+		if (star) star.style.display = estaCompleto ? 'inline' : 'none';
+
+		let claveLibro = 'salmo-Salmos';
+		if (estaCompleto && !estadoAnteriorLibros[claveLibro]) {
+			lanzarConfeti();
+			mostrarMensajeLibroCompletado('Salmos');
+		}
+		estadoAnteriorLibros[claveLibro] = estaCompleto;
+	}
+
+	// ===== PROVERBIOS =====
+	let idProv = 'grid-book-Proverbios';
+	let gProv = document.getElementById(idProv);
+	if (gProv) {
+		let ch = 0;
+		for (let i = 1; i <= 31; i++) {
+			let cb = document.getElementById('check-prov-' + i);
+			if (cb && cb.checked) ch++;
+		}
+
+		let b = document.getElementById('badge-' + idProv);
+		if (b) b.innerText = ch + '/31';
+
+		let star = document.getElementById('star-book-' + idProv);
+		let estaCompleto = (ch === 31);
+		if (star) star.style.display = estaCompleto ? 'inline' : 'none';
+
+		let claveLibro = 'prov-Proverbios';
+		if (estaCompleto && !estadoAnteriorLibros[claveLibro]) {
+			lanzarConfeti();
+			mostrarMensajeLibroCompletado('Proverbios');
+		}
+		estadoAnteriorLibros[claveLibro] = estaCompleto;
+	}
 
     // Complementarios
     librosComplementarios.forEach(bl => bl.libros.forEach(lib => {
@@ -1513,26 +1613,26 @@ function renderizarPasajesFavoritos() {
         panel.appendChild(dropdownDiv);
         let contenedorListaInterna = document.getElementById('list-container-' + idDropdownFav);
         listaPasajesDelLibro.forEach(function(item) {
-            // Preparar la cita para el enlace
-			let citaParaLink = item.citaUrl;
+			// Construir enlace a bdj.alpichel.com
+			let citaParaLink = item.citaUrl.trim();
 			
-			// Corrección especial para Tobías → Tobit
-			citaParaLink = citaParaLink.replace(/^Tobías\b/i, 'Tobit').replace(/^Tobias\b/i, 'Tobit');
+			// Extraer libro, capítulo y versículos
+			let matchCita = citaParaLink.match(/^((?:[123]\s+)?[A-Za-záéíóúÁÉÍÓÚñÑüÜ]+)\s+(\d+)(?::(\d+(?:-\d+)?))?/i);
 			
-			// Usar TLA para los libros deuterocanónicos, RVR1960 para el resto
-			const librosDeuterocanonicos = ['Tobit', 'Judit', 'Sabiduría', 'Eclesiástico', 'Baruc', '1 Macabeos', '2 Macabeos'];
-			let version = 'RVR1960';
+			let urlFormateada = "#";
 			
-			let primerPalabra = citaParaLink.split(' ')[0];
-			if (/^[1-2]$/.test(primerPalabra)) {
-			    primerPalabra = primerPalabra + ' ' + (citaParaLink.split(' ')[1] || '');
+			if (matchCita) {
+			    let nombreLibro = matchCita[1].trim();
+			    let capitulo = matchCita[2];
+			    let versiculos = matchCita[3] || null;
+			
+			    let slug = obtenerSlugLibro(nombreLibro);
+			    urlFormateada = `https://bdj.alpichel.com/${slug}/${capitulo}`;
+			
+			    if (versiculos) {
+			        urlFormateada += `?verses=${versiculos}`;
+			    }
 			}
-			
-			if (librosDeuterocanonicos.some(libro => citaParaLink.toLowerCase().startsWith(libro.toLowerCase()))) {
-			    version = 'TLA';
-			}
-			
-			let urlFormateada = "https://biblegateway.com/passage/?search=" + encodeURIComponent(citaParaLink) + "&version=" + version;
             let itemDiv = document.createElement('div');
             itemDiv.className = 'favorite-item';
             itemDiv.style.flexDirection = 'column';
@@ -1574,37 +1674,38 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }
 
-        // Salmos
-        let titS = document.getElementById('psalms-header-0');
-        let listaS = document.getElementById('contenedor-salmos');
-        if (titS && listaS) {
-            let leidos = listaS.querySelectorAll('input:checked').length;
-            let star = (leidos === 150) ? ' <span class="star-completed">✨</span>' : '';
-            titS.innerHTML = '<span>SALMOS' + star + '</span><span class="stage-books-counter">' + leidos + ' / 150</span>';
-            let claveS = 'salmos';
-            let ahoraCompletaS = (leidos === 150);
-            if (ahoraCompletaS && !estadoAnteriorEtapas[claveS]) {
-                lanzarConfeti();
-                mostrarMensajeEtapaCompletada("SALMOS");
-            }
-            estadoAnteriorEtapas[claveS] = ahoraCompletaS;
-        }
+		// Columna central (Salmos + Proverbios) → 2 libros
+		let boxCentro = document.getElementById('stage-header-salmos-prov');
+		let subCentro = document.getElementById('stage-block-salmos-prov');
+		if (boxCentro && subCentro) {
+			let comp = 0;
+			let tot = 2;
 
-        // Proverbios
-        let titP = document.getElementById('proverbios-header-0');
-        let listaP = document.getElementById('contenedor-proverbios');
-        if (titP && listaP) {
-            let leidosP = listaP.querySelectorAll('input:checked').length;
-            let starP = (leidosP === 31) ? ' <span class="star-completed">✨</span>' : '';
-            titP.innerHTML = '<span>PROVERBIOS' + starP + '</span><span class="stage-books-counter">' + leidosP + ' / 31</span>';
-            let claveP = 'proverbios';
-            let ahoraCompletaP = (leidosP === 31);
-            if (ahoraCompletaP && !estadoAnteriorEtapas[claveP]) {
-                lanzarConfeti();
-                mostrarMensajeEtapaCompletada("PROVERBIOS");
-            }
-            estadoAnteriorEtapas[claveP] = ahoraCompletaP;
-        }
+			// Verificar Salmos
+			let badgeSalmos = document.getElementById('badge-grid-book-Salmos');
+			if (badgeSalmos) {
+				let partes = badgeSalmos.innerText.split('/');
+				if (parseInt(partes[0]) === 150) comp++;
+			}
+
+			// Verificar Proverbios
+			let badgeProv = document.getElementById('badge-grid-book-Proverbios');
+			if (badgeProv) {
+				let partes = badgeProv.innerText.split('/');
+				if (parseInt(partes[0]) === 31) comp++;
+			}
+
+			let star = (comp === tot) ? ' <span class="star-completed">✨</span>' : '';
+			boxCentro.innerHTML = '<span>ETAPA TRANSVERSAL: SALMOS Y PROVERBIOS' + star + '</span><span class="stage-books-counter">' + comp + ' / ' + tot + '</span>';
+
+			let clave = 'salmos-prov';
+			let ahoraCompleta = (comp === tot);
+			if (ahoraCompleta && !estadoAnteriorEtapas[clave]) {
+				lanzarConfeti();
+				mostrarMensajeEtapaCompletada('ETAPA TRANSVERSAL: SALMOS Y PROVERBIOS');
+			}
+			estadoAnteriorEtapas[clave] = ahoraCompleta;
+		}
 
         if (typeof librosComplementarios !== 'undefined') {
             librosComplementarios.forEach(function(bl, bIdx) {
@@ -2126,8 +2227,88 @@ document.getElementById('modal-instrucciones').addEventListener('click', functio
     }
 });
 
+function obtenerSlugLibro(nombreLibro) {
+    if (!nombreLibro) return '';
+
+    let nombre = nombreLibro.trim();
+
+    // Mapa de casos especiales (prioridad alta)
+    const especiales = {
+        // Libros históricos numerados
+        "1 Reyes": "primer_libro_de_los_reyes",
+        "2 Reyes": "segundo_libro_de_los_reyes",
+        "1 Crónicas": "primer_libro_de_las_cronicas",
+        "2 Crónicas": "segundo_libro_de_las_cronicas",
+        "1 Macabeos": "primer_libro_de_los_macabeos",
+        "2 Macabeos": "segundo_libro_de_los_macabeos",
+
+        // Poéticos / Sabiduría
+        "Eclesiastés": "qohelet_eclesiastes",
+        "Eclesiástico": "siracida_eclesiastico",
+        "Cantares": "cantar_de_los_cantares",
+
+        // Evangelios
+        "Mateo": "evangelio_segun_san_mateo",
+        "Marcos": "evangelio_segun_san_marcos",
+        "Lucas": "evangelio_segun_san_lucas",
+        "Juan": "evangelio_segun_san_juan",
+
+        // Hechos
+        "Hechos": "hechos_de_los_apostoles",
+
+        // Cartas a los Tesalonicenses y Corintios
+        "1 Corintios": "primera_carta_a_los_corintios",
+        "2 Corintios": "segunda_carta_a_los_corintios",
+        "1 Tesalonicenses": "primera_carta_a_los_tesalonicenses",
+        "2 Tesalonicenses": "segunda_carta_a_los_tesalonicenses",
+
+        // Timoteo
+        "1 Timoteo": "primera_carta_a_timoteo",
+        "2 Timoteo": "segunda_carta_a_timoteo",
+
+        // Pedro y Juan
+        "1 Pedro": "primera_carta_de_pedro",
+        "2 Pedro": "segunda_carta_de_pedro",
+        "1 Juan": "primera_carta_de_juan",
+        "2 Juan": "segunda_carta_de_juan",
+        "3 Juan": "tercera_carta_de_juan",
+
+        // Otros casos útiles
+        "Tobías": "tobias",
+        "Judit": "judit",
+        "Sabiduría": "sabiduria",
+        "Baruc": "baruc"
+    };
+
+    // Si está en el mapa de especiales, lo usamos directamente
+    if (especiales[nombre]) {
+        return especiales[nombre];
+    }
+
+    // Regla general para otros libros numerados (1 Samuel, 2 Samuel, etc.)
+    let match = nombre.match(/^([123])\s+(.+)$/i);
+    if (match) {
+        const numero = match[1];
+        const resto = match[2];
+
+        const prefijos = {
+            '1': 'primer_libro_de_',
+            '2': 'segundo_libro_de_',
+            '3': 'tercer_libro_de_'
+        };
+
+        nombre = prefijos[numero] + resto;
+    }
+
+    // Normalización final
+    return nombre
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')   // quitar tildes
+        .replace(/\s+/g, '_')
+        .replace(/[^a-z0-9_]/g, '');
+}
+
 document.addEventListener("DOMContentLoaded", () => setTimeout(window.verificarYActualizarLogros, 300));
 window.onload = cargarProgreso;
 </script>
-</body>
-</html>

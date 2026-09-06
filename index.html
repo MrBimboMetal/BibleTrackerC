@@ -502,35 +502,38 @@ body:not([data-theme="dark"]) {
         color: #d81b60 !important;
     }
 }
-/* ===== Better definition for Diario de Sesiones in Clear mode ===== */
+/* ===== Make Diario de Sesiones blocks match Dark mode style in Clear mode ===== */
 body:not([data-theme="dark"]) .session-block {
-    background-color: #fff0f5 !important;
-    border: 1px solid #f48fb1 !important;
-    border-left: 4px solid #ec407a !important;
-    box-shadow: 0 2px 6px rgba(216, 27, 96, 0.10) !important;
-    margin-bottom: 8px !important;
+    background-color:  #fce4ec !important;
+    border-left: 4px solid #e91e63 !important;
+    padding: 0px 14px;               /* ← reducido */
+    border-radius: 6px;
+    margin-bottom: 10px;             /* ← un poco menos espacio */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    transition: padding 0.2s ease;
 }
-
-body:not([data-theme="dark"]) .session-block.flagged {
-    border-left-color: #f1c40f !important;
-    background-color: #fff8e1 !important;
-    border-color: #f1c40f !important;
-    box-shadow: 0 0 8px rgba(241, 196, 15, 0.25) !important;
+body:not([data-theme="dark"]) .session-block.open {
+    padding: 10px 12px !important;
 }
 
 body:not([data-theme="dark"]) .session-header {
-    border-bottom: 1px solid rgba(216, 27, 96, 0.12);
+    padding: 0px 0 !important;
+    min-height: 28px !important;
 }
 
 body:not([data-theme="dark"]) .session-date {
-    color: #ad1457 !important;
+    font-size: 0.9rem !important;
     font-weight: 700 !important;
+    color: #ad1457 !important;
 }
 
-/* Month headers more defined */
-body:not([data-theme="dark"]) .history-sidebar button {
-    border-radius: 6px !important;
-    margin: 4px 0 !important;
+body:not([data-theme="dark"]) .session-toggle {
+    font-size: 0.75rem !important;
+    color: #e91e63 !important;
+}
+
+body:not([data-theme="dark"]) .flag-btn {
+    font-size: 1rem !important;
 }
 </style>
 </head>

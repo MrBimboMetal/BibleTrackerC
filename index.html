@@ -502,6 +502,36 @@ body:not([data-theme="dark"]) {
         color: #d81b60 !important;
     }
 }
+/* ===== Better definition for Diario de Sesiones in Clear mode ===== */
+body:not([data-theme="dark"]) .session-block {
+    background-color: #fff0f5 !important;
+    border: 1px solid #f48fb1 !important;
+    border-left: 4px solid #ec407a !important;
+    box-shadow: 0 2px 6px rgba(216, 27, 96, 0.10) !important;
+    margin-bottom: 8px !important;
+}
+
+body:not([data-theme="dark"]) .session-block.flagged {
+    border-left-color: #f1c40f !important;
+    background-color: #fff8e1 !important;
+    border-color: #f1c40f !important;
+    box-shadow: 0 0 8px rgba(241, 196, 15, 0.25) !important;
+}
+
+body:not([data-theme="dark"]) .session-header {
+    border-bottom: 1px solid rgba(216, 27, 96, 0.12);
+}
+
+body:not([data-theme="dark"]) .session-date {
+    color: #ad1457 !important;
+    font-weight: 700 !important;
+}
+
+/* Month headers more defined */
+body:not([data-theme="dark"]) .history-sidebar button {
+    border-radius: 6px !important;
+    margin: 4px 0 !important;
+}
 </style>
 </head>
 <body>

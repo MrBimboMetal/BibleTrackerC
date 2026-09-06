@@ -6,17 +6,18 @@
 <title>Diario de Estudio Bíblico Inteligente</title>
 <style>
 :root {
-    --bg-color: #f4f7f6;
-    --card-bg: #ffffff;
-    --text-color: #2c3e50;
-    --primary: #2980b9;
-    --primary-light: #ebf5fb;
-    --accent: #27ae60;
-    --border-color: #dcdde1;
+    --bg-color: #f8bbd9;              /* Rosa más saturado (fondo principal) */
+    --card-bg: #f48fb1;               /* Rosa un poco más claro para tarjetas */
+    --text-color: #4a1942;
+    --primary: #d81b60;
+    --primary-light: #f48fb1;
+    --accent: #ec407a;
+    --border-color: #f06292;
+
     /* Variables del mini-calendario */
-    --cal-bg-contenedor: #ffffff;
-    --cal-borde-contenedor: #dcdde1;
-    --cal-shadow: rgba(0,0,0,0.08);
+    --cal-bg-contenedor: #f48fb1;
+    --cal-borde-contenedor: #f06292;
+    --cal-shadow: rgba(216, 27, 96, 0.15);
 }
 [data-theme="dark"] {
     --bg-color: #1a1a1a;
@@ -40,6 +41,94 @@ body {
     display: flex;
     justify-content: center;
     transition: background-color 0.3s, color 0.3s;
+}
+/* Sparkling + animated effect only in Clear / Light mode */
+body:not([data-theme="dark"]) {
+    background-color: var(--bg-color);
+    background-image: 
+        radial-gradient(circle at 15% 25%, rgba(255,255,255,0.7) 1px, transparent 1px),
+        radial-gradient(circle at 85% 15%, rgba(255,255,255,0.5) 1px, transparent 1px),
+        radial-gradient(circle at 40% 70%, rgba(255,255,255,0.6) 1.5px, transparent 1.5px),
+        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.45) 1px, transparent 1px),
+        radial-gradient(circle at 25% 90%, rgba(255,255,255,0.65) 1px, transparent 1px),
+        radial-gradient(circle at 90% 50%, rgba(255,255,255,0.4) 1.2px, transparent 1.2px),
+        radial-gradient(circle at 55% 40%, rgba(255,255,255,0.55) 1px, transparent 1px),
+        radial-gradient(circle at 10% 60%, rgba(255,255,255,0.5) 1px, transparent 1px);
+    background-size: 
+        55px 55px,
+        75px 75px,
+        45px 45px,
+        90px 90px,
+        65px 65px,
+        80px 80px,
+        70px 70px,
+        100px 100px;
+    background-attachment: fixed;
+    animation: sparkleMove 18s linear infinite;
+}
+/* ===== Medals – Clear mode (much darker) ===== */
+body:not([data-theme="dark"]) .medalla-logro {
+    border: 1.5px solid #2d3748;          /* Much darker border */
+    background: rgba(0, 0, 0, 0.06);
+    opacity: 0.55;                        /* More visible */
+    filter: grayscale(1);
+    color: #2d3748;                       /* Darker icon color */
+}
+
+/* Unlocked medals stay golden in both modes */
+body:not([data-theme="dark"]) .medalla-logro.desbloqueada {
+    border-color: #f1c40f;
+    background: rgba(255, 255, 255, 0.15);
+    opacity: 1;
+    filter: grayscale(0);
+    color: inherit;
+}
+
+/* Title "Medallero de Logros" also darker in Clear mode */
+body:not([data-theme="dark"]) .progress-container {
+    color: #2d3748;
+}
+body:not([data-theme="dark"]) .progress-container div[style*="color: #7f8c8d"],
+body:not([data-theme="dark"]) .progress-container span[style*="color: #7f8c8d"],
+body:not([data-theme="dark"]) #notes-count-text,
+body:not([data-theme="dark"]) .progress-container div[style*="line-height: 1.3"] {
+    color: #2d3748 !important;
+}
+@keyframes sparkleMove {
+    0% {
+        background-position: 
+            0 0,
+            0 0,
+            0 0,
+            0 0,
+            0 0,
+            0 0,
+            0 0,
+            0 0;
+    }
+    100% {
+        background-position: 
+            55px 55px,
+            -75px 75px,
+            45px -45px,
+            -90px 90px,
+            65px 65px,
+            -80px -80px,
+            70px -70px,
+            100px 100px;
+    }
+}
+/* ===== Clear mode – replace light blue with theme pink ===== */
+body:not([data-theme="dark"]) #porcentaje-principal-val,
+body:not([data-theme="dark"]) [style*="color: #00b4d8"],
+body:not([data-theme="dark"]) #fecha-fin-principal-val {
+    color: #d81b60 !important;   /* same pink as the buttons */
+}
+
+/* Month name in Diario de Sesiones (Septiembre, etc.) */
+body:not([data-theme="dark"]) .history-sidebar button[style*="color:#3498db"],
+body:not([data-theme="dark"]) .history-sidebar button {
+    color: #d81b60 !important;
 }
 .main-layout { display: flex; max-width: 1350px; width: 100%; gap: 25px; }
 .left-column { flex: 1.5; min-width: 320px; }
@@ -90,14 +179,34 @@ body {
 .progress-bar-bg { background: #e0e0e0; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 8px; }
 .progress-bar { background: var(--accent); height: 100%; width: 0%; transition: width 0.3s ease; }
 .stage-title-box {
-    position: relative; background-color: #4a90e2; color: white; font-weight: bold; border-radius: 6px;
-    padding: 12px 65px 12px 12px; margin-top: 10px; margin-bottom: 4px; font-size: 0.78rem;
-    line-height: 1.3; text-transform: uppercase; cursor: pointer; min-height: 40px; box-sizing: border-box;
+    position: relative;
+    background-color: var(--primary);
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 12px 65px 12px 12px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    font-size: 0.78rem;
+    line-height: 1.3;
+    text-transform: uppercase;
+    cursor: pointer;
+    min-height: 40px;
+    box-sizing: border-box;
 }
+
 .stage-title-box .stage-books-counter {
-    position: absolute; top: 8px; right: 8px; font-size: 0.7rem !important;
-    background: rgba(0,0,0,0.25) !important; color: white !important; padding: 2px 6px !important;
-    border-radius: 4px !important; font-weight: bold; margin: 0 !important; white-space: nowrap;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 0.7rem !important;
+    background: rgba(0, 0, 0, 0.25) !important;
+    color: white !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-weight: bold;
+    margin: 0 !important;
+    white-space: nowrap;
 }
 .star-completed {
     display: inline-block; margin-left: 6px; animation: starPulse 1.5s infinite;
@@ -124,16 +233,31 @@ body {
 .chapters-grid { display: none; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 6px; padding: 12px; background-color: var(--card-bg); border-top: 1px solid var(--border-color); }
 .chapters-grid.open { display: grid; }
 .chapter-cell {
-    display: flex; align-items: center; justify-content: center; padding: 6px 4px; border: 1px solid var(--border-color);
-    border-radius: 4px; background-color: var(--bg-color); font-size: 0.85rem; gap: 5px; transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--card-bg);   /* ← matches the card background */
+    font-size: 0.85rem;
+    gap: 5px;
+    transition: background-color 0.2s, border-color 0.2s;
 }
-.chapter-cell.checked { background-color: #f0fdf4 !important; border-color: #c3e6cb !important; color: #7f8c8d; text-decoration: line-through; }
-[data-theme="dark"] .chapter-cell.checked { background-color: #1b3a24 !important; border-color: #27ae60 !important; }
-.chapter-cell input[type="checkbox"] { width: 15px; height: 15px; margin-right: 0; cursor: pointer; }
-.fav-book-dropdown { background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 6px; margin-top: 6px; overflow: hidden; }
-.fav-book-header {
-    width: 100%; background-color: var(--primary-light); color: var(--text-color); border: none; padding: 6px 10px;
-    text-align: left; font-size: 0.82rem; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+
+/* Checked state – Clear mode (soft green) */
+.chapter-cell.checked {
+    background-color: #d1fae5 !important;   /* soft green */
+    border-color: #27ae60 !important;
+    color: #065f46;
+    text-decoration: line-through;
+}
+
+/* Checked state – Dark mode (keeps the previous strong green) */
+[data-theme="dark"] .chapter-cell.checked {
+    background-color: #1b3a24 !important;
+    border-color: #27ae60 !important;
+    color: #a7f3d0;
 }
 .fav-book-header::after { content: "▼"; font-size: 0.65rem; transition: transform 0.2s; }
 .fav-book-dropdown.open .fav-book-header::after { transform: rotate(180deg); }
@@ -178,8 +302,26 @@ body {
 }
 .btn-herramienta:hover { background: var(--accent); }
 #buscador-global {
-    padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color);
-    background: var(--card-bg); color: var(--text-color); width: 220px; font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1.5px solid #d81b60;          /* stronger pink border */
+    background: #fff0f5;                  /* slightly lighter than card for contrast */
+    color: #2d3748;                       /* dark text */
+    width: 220px;
+    font-size: 0.85rem;
+}
+
+/* Darker placeholder in Clear mode */
+body:not([data-theme="dark"]) #buscador-global::placeholder {
+    color: #718096;
+    opacity: 1;
+}
+
+/* Keep nice appearance in Dark mode */
+[data-theme="dark"] #buscador-global {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
 }
 .session-details {
     display: none;
@@ -278,6 +420,88 @@ body {
 @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
 @keyframes slideInUp { 0% { transform: translateY(50px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
 @keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; transform: translateY(-20px); } }
+/* ===== Restore Pasajes Favoritos visuals (safe version) ===== */
+
+.history-sidebar .fav-book-dropdown {
+    background-color: var(--bg-color) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 6px !important;
+    margin-top: 6px !important;
+    overflow: hidden !important;
+}
+
+.history-sidebar .fav-book-header {
+    width: 100% !important;
+    background-color: var(--primary-light) !important;
+    color: var(--text-color) !important;
+    border: none !important;
+    padding: 6px 10px !important;
+    text-align: left !important;
+    font-size: 0.82rem !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-radius: 0 !important;
+}
+
+.history-sidebar .fav-book-header::after {
+    content: "▼" !important;
+    font-size: 0.65rem !important;
+    transition: transform 0.2s !important;
+}
+
+.history-sidebar .fav-book-dropdown.open .fav-book-header::after {
+    transform: rotate(180deg) !important;
+}
+
+/* Only visual styles for the list - NO display rules */
+.history-sidebar .fav-book-list {
+    padding: 6px !important;
+    background-color: var(--card-bg) !important;
+    border-top: 1px solid var(--border-color) !important;
+}
+
+/* Badge */
+.history-sidebar .fav-book-header span[style*="background"] {
+    background: var(--primary) !important;
+    color: white !important;
+}
+/* ===== Final precise color mapping (Clear mode) ===== */
+body:not([data-theme="dark"]) {
+
+	/* "1 día" badge */
+    .history-sidebar button span[style*="background"] {
+        background-color: #d81b60 !important;
+        color: #ffffff !important;
+    }
+
+    /* Fin Plan Principal → medium pink */
+    #fecha-fin-principal-val {
+        color: #e91e63 !important;
+    }
+
+    /* Fin Estimado General → darker pink */
+    #fecha-fin-general-val {
+        color: #ad1457 !important;
+    }
+
+    /* Racha Actual → soft green */
+    #racha-actual-val {
+        color: #66bb6a !important;
+    }
+
+    /* Racha Máxima → stronger green */
+    #racha-max-val {
+        color: #2e7d32 !important;
+    }
+
+    /* Días Totales de Estudio → pink equivalent to dark mode primary */
+    #dias-totales-val {
+        color: #d81b60 !important;
+    }
+}
 </style>
 </head>
 <body>
@@ -293,7 +517,7 @@ body {
             <div id="contenedor-medallas-logros" style="display: grid; grid-template-columns: repeat(23, 25px); gap: 10px 20px; align-items: center; justify-content: center; margin-top: 24px; width: fit-content;"></div>
         </div>
 		<div style="text-align: right; font-size: 0.85rem; line-height: 1.3; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end;">
-			<div style="font-weight: bold; font-size: 1.35rem; color: var(--accent); margin-bottom: 2px;">
+			<div style="font-weight: bold; font-size: 1.35rem; color: #27ae60; margin-bottom: 2px;">
 				Canon Católico: <span id="porcentaje-general-val">0%</span>
 			</div>
 			<div style="font-weight: bold; font-size: 1.05rem; color: #9b59b6; margin-bottom: 6px;">
@@ -303,15 +527,15 @@ body {
 				<div style="font-weight: bold; font-size: 0.9rem; color: #00b4d8; margin-bottom: 4px;">
 					🎯 Plan Principal: <span id="porcentaje-principal-val">0%</span>
 				</div>
-				<div style="color: #7f8c8d;">
-					Base Doctrinal: <span id="porcentaje-ruta-val" style="font-weight:bold; color:var(--primary);">0%</span> <span id="conteo-ruta-val">(0/537 caps)</span>
-				</div>
-				<div style="color: #7f8c8d;">
-					Salmos + Proverbios: <span id="porcentaje-salmos-val" style="font-weight:bold; color:var(--primary);">0%</span> <span id="conteo-salmos-val">(0/181)</span>
-				</div>
-				<div style="color: #7f8c8d;">
-					Libros Adicionales: <span id="porcentaje-comp-val" style="font-weight:bold; color:var(--primary);">0%</span> <span id="conteo-comp-val">(0/608 caps)</span>
-				</div>
+					<div style="color: #7f8c8d;">
+						Base Doctrinal: <span id="porcentaje-ruta-val" style="font-weight:bold; color:#2980b9;">0%</span> <span id="conteo-ruta-val">(0/537 caps)</span>
+					</div>
+					<div style="color: #7f8c8d;">
+						Salmos + Proverbios: <span id="porcentaje-salmos-val" style="font-weight:bold; color:#2980b9;">0%</span> <span id="conteo-salmos-val">(0/181)</span>
+					</div>
+					<div style="color: #7f8c8d;">
+						Libros Adicionales: <span id="porcentaje-comp-val" style="font-weight:bold; color:#2980b9;">0%</span> <span id="conteo-comp-val">(0/608 caps)</span>
+					</div>
 				<span id="notes-count-text" style="display: block; font-size: 0.8rem; color: #7f8c8d; font-weight: normal; margin-top: 30px;">0 bloques con notas</span>
 			</div>
 		</div>
@@ -324,7 +548,7 @@ body {
         <div id="progress-bar-protestante" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: #9b59b6; border-radius: 4px; transition: width 0.3s ease; z-index: 2;"></div>
         
         <!-- Capa Católica / General (verde) - la más corta, va arriba -->
-        <div class="progress-bar" id="progress-bar" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: var(--accent); border-radius: 4px; transition: width 0.3s ease; z-index: 3;"></div>
+        <div class="progress-bar" id="progress-bar" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; background-color: #27ae60; border-radius: 4px; transition: width 0.3s ease; z-index: 3;"></div>
     </div>
     <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 5px; margin-right: auto;">
@@ -1276,60 +1500,115 @@ function actualizarFechasFin() {
 function generarMiniCalendario(fechasEstudio) {
     let cont = document.getElementById('mini-calendario-box');
     if (!cont) return;
+
+    // Detect current theme
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+
+    // Colors according to theme
+    const colorTextoNormal   = isDark ? 'rgba(255,255,255,0.22)' : '#2c3e50';
+    const colorTextoHoy      = isDark ? '#3498db' : '#d81b60';
+    const colorTextoEstudiado= isDark ? '#fff' : '#fff';
+    const colorLabel         = isDark ? 'rgba(255,255,255,0.7)' : '#4a1942';
+    const colorMes           = isDark ? 'rgba(255,255,255,0.85)' : '#4a1942';
+    const colorTituloAnio    = isDark ? '#fff' : '#4a1942';
+    const colorLeyenda       = isDark ? 'rgba(255,255,255,0.6)' : '#666';
+
     let set = new Set(), anos = new Set();
     fechasEstudio.forEach(f => {
         let p = f.split('/');
-        if (p.length===3) {
-            let d=parseInt(p[0]), m=parseInt(p[1]), a=parseInt(p[2]);
-            if (!isNaN(a)&&a>0) { set.add(d+'/'+m+'/'+a); anos.add(a); }
+        if (p.length === 3) {
+            let d = parseInt(p[0]), m = parseInt(p[1]), a = parseInt(p[2]);
+            if (!isNaN(a) && a > 0) {
+                set.add(d + '/' + m + '/' + a);
+                anos.add(a);
+            }
         }
     });
+
     if (!anos.size) {
-        cont.innerHTML = '<div style="color:#7f8c8d; font-size:0.85rem; font-style:italic; text-align:center; padding:12px 0;">El mapa se activará con tu primera lectura.</div>';
+        cont.innerHTML = `<div style="color:#7f8c8d; font-size:0.85rem; font-style:italic; text-align:center; padding:12px 0;">El mapa se activará con tu primera lectura.</div>`;
         return;
     }
-    let listaAnos = [...anos].sort((a,b)=>a-b);
-    const nMes = ["E","F","M","A","M","J","J","A","S","O","N","D"];
+
+    let listaAnos = [...anos].sort((a, b) => a - b);
+    const nMes  = ["E","F","M","A","M","J","J","A","S","O","N","D"];
     const nMesL = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-    let hoy = new Date(), dH=hoy.getDate(), mH=hoy.getMonth(), aH=hoy.getFullYear();
+    let hoy = new Date(), dH = hoy.getDate(), mH = hoy.getMonth(), aH = hoy.getFullYear();
+
     let html = '';
+
     listaAnos.forEach(ano => {
-        let prim = new Date(ano,0,1);
+        let prim = new Date(ano, 0, 1);
         let ds = prim.getDay();
-        let des = ds===0 ? 6 : ds-1;
+        let des = ds === 0 ? 6 : ds - 1;
         let colMes = Array(12).fill(0);
-        let fb = new Date(ano,0,1), acum = des;
-        while (fb.getFullYear()===ano) {
-            if (fb.getDate()===1) colMes[fb.getMonth()] = Math.floor(acum/7)+1;
-            acum++; fb.setDate(fb.getDate()+1);
+        let fb = new Date(ano, 0, 1), acum = des;
+
+        while (fb.getFullYear() === ano) {
+            if (fb.getDate() === 1) colMes[fb.getMonth()] = Math.floor(acum / 7) + 1;
+            acum++;
+            fb.setDate(fb.getDate() + 1);
         }
-        let totCol = Math.ceil(acum/7);
-        let filaM = '<div style="display:grid; grid-template-columns:repeat('+totCol+',15px); gap:4px; font-size:0.68rem; font-weight:bold; height:16px; margin-bottom:3px;">';
-        for (let c=1; c<=totCol; c++) {
+
+        let totCol = Math.ceil(acum / 7);
+
+        // Month labels
+        let filaM = `<div style="display:grid; grid-template-columns:repeat(${totCol},15px); gap:4px; font-size:0.68rem; font-weight:bold; height:16px; margin-bottom:3px; color:${colorMes};">`;
+        for (let c = 1; c <= totCol; c++) {
             let m = colMes.indexOf(c);
-            if (m!==-1) filaM += '<div style="grid-column:'+c+'; text-align:left;">'+nMes[m]+'</div>';
+            if (m !== -1) filaM += `<div style="grid-column:${c}; text-align:left;">${nMes[m]}</div>`;
         }
         filaM += '</div>';
-        html += '<div style="margin-bottom:18px; border-bottom:1px dashed rgba(255,255,255,0.05); padding-bottom:12px;">';
-        html += '<div style="font-size:0.9rem; font-weight:bold; margin-bottom:10px;">📊 Año '+ano+'</div>';
-        html += '<div style="display:flex; gap:7px;"><div style="display:grid; grid-template-rows:repeat(7,15px); gap:4px; font-size:0.6rem; font-weight:bold; text-align:right; padding-top:19px; width:12px;"><div>L</div><div></div><div>X</div><div></div><div>V</div><div></div><div>D</div></div>';
-        html += '<div style="overflow-x:auto; flex-grow:1;">'+filaM+'<div style="display:grid; grid-template-rows:repeat(7,15px); grid-auto-flow:column; grid-auto-columns:15px; gap:4px;">';
-        for (let i=0; i<des; i++) html += '<div style="width:15px; height:15px; background:transparent;"></div>';
-        let f = new Date(ano,0,1);
-        while (f.getFullYear()===ano) {
-            let dn=f.getDate(), mn=f.getMonth();
-            let key = dn+'/'+(mn+1)+'/'+ano;
-            let est = set.has(key);
-            let esHoy = (dn===dH && mn===mH && ano===aH);
-            let bg = est ? '#2ecc71' : (esHoy ? 'rgba(52,152,219,0.15)' : 'rgba(255,255,255,0.05)');
-            let bd = esHoy ? '1px solid #3498db' : 'none';
-            let col = est ? '#fff' : (esHoy ? '#3498db' : 'rgba(255,255,255,0.22)');
-            html += '<div title="'+dn+' de '+nMesL[mn]+' '+ano+(est?' (Estudiado)':'')+'" style="width:15px; height:15px; background:'+bg+'; border:'+bd+'; border-radius:2px; display:flex; align-items:center; justify-content:center; font-size:0.55rem; font-weight:bold; color:'+col+'; font-family:monospace;">'+dn+'</div>';
-            f.setDate(f.getDate()+1);
+
+        html += `<div style="margin-bottom:18px; border-bottom:1px dashed rgba(0,0,0,0.08); padding-bottom:12px;">`;
+        html += `<div style="font-size:0.9rem; font-weight:bold; margin-bottom:10px; color:${colorTituloAnio};">📊 Año ${ano}</div>`;
+        html += `<div style="display:flex; gap:7px;">`;
+
+        // Weekday labels (L X V D)
+        html += `<div style="display:grid; grid-template-rows:repeat(7,15px); gap:4px; font-size:0.6rem; font-weight:bold; text-align:right; padding-top:19px; width:12px; color:${colorLabel};">
+                    <div>L</div><div></div><div>X</div><div></div><div>V</div><div></div><div>D</div>
+                 </div>`;
+
+        html += `<div style="overflow-x:auto; flex-grow:1;">${filaM}
+                 <div style="display:grid; grid-template-rows:repeat(7,15px); grid-auto-flow:column; grid-auto-columns:15px; gap:4px;">`;
+
+        // Empty cells at the beginning
+        for (let i = 0; i < des; i++) {
+            html += `<div style="width:15px; height:15px; background:transparent;"></div>`;
         }
-        html += '</div></div></div></div>';
+
+        // Days
+        let f = new Date(ano, 0, 1);
+        while (f.getFullYear() === ano) {
+            let dn = f.getDate(), mn = f.getMonth();
+            let key = dn + '/' + (mn + 1) + '/' + ano;
+            let est = set.has(key);
+            let esHoy = (dn === dH && mn === mH && ano === aH);
+
+            let bg = est ? '#27ae60' : (esHoy ? 'rgba(216,27,96,0.15)' : (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'));
+			let bd = est ? '1px solid #1e8449' : (esHoy ? '1px solid #2980b9' : 'none');
+            let col = est ? colorTextoEstudiado : (esHoy ? colorTextoHoy : colorTextoNormal);
+
+            html += `<div title="${dn} de ${nMesL[mn]} ${ano}${est ? ' (Estudiado)' : ''}"
+                         style="width:15px; height:15px; background:${bg}; border:${bd}; border-radius:2px;
+                                display:flex; align-items:center; justify-content:center;
+                                font-size:0.55rem; font-weight:bold; color:${col}; font-family:monospace;">
+                        ${dn}
+                     </div>`;
+            f.setDate(f.getDate() + 1);
+        }
+
+        html += `</div></div></div></div>`;
     });
-    html += '<div style="display:flex; justify-content:flex-end; align-items:center; gap:5px; font-size:0.68rem; margin-top:-2px;"><span>Menos</span><div style="width:11px; height:11px; background:rgba(255,255,255,0.05); border-radius:1px;"></div><div style="width:11px; height:11px; background:#2ecc71; border-radius:1px;"></div><span>Más</span></div>';
+
+    // Legend
+	html += `<div style="display:flex; justify-content:flex-end; align-items:center; gap:5px; font-size:0.68rem; margin-top:-2px; color:${colorLeyenda};">
+				<span>Menos</span>
+				<div style="width:11px; height:11px; background:${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'}; border-radius:1px;"></div>
+				<div style="width:11px; height:11px; background:#27ae60; border-radius:1px;"></div>
+				<span>Más</span>
+			 </div>`;
+
     cont.innerHTML = html;
 }
 
@@ -1532,14 +1811,21 @@ function actualizarContadoresInsignias() {
 function toggleTheme() {
     let cur = document.body.getAttribute('data-theme');
     let btn = document.getElementById('theme-btn');
+
     if (cur === 'dark') {
         document.body.removeAttribute('data-theme');
-        localStorage.setItem('biblia_theme','light');
+        localStorage.setItem('biblia_theme', 'light');
         btn.innerText = '🌙';
     } else {
-        document.body.setAttribute('data-theme','dark');
-        localStorage.setItem('biblia_theme','dark');
+        document.body.setAttribute('data-theme', 'dark');
+        localStorage.setItem('biblia_theme', 'dark');
         btn.innerText = '☀️';
+    }
+
+    // Re-generate the mini calendar so the text colors update immediately
+    // We call recalcularBloquesHistorial because it already calls generarMiniCalendario
+    if (typeof recalcularBloquesHistorial === 'function') {
+        recalcularBloquesHistorial();
     }
 }
 

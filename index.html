@@ -1414,7 +1414,7 @@ function recalcularBloquesHistorial() {
             let idMes = 'mes-' + año + '-' + mesIdx;
             let btn = document.createElement('button');
             btn.style.cssText = "background:none; border:none; width:100%; text-align:left; padding:6px 8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; color:#3498db; font-size:0.92rem; font-weight:bold; margin:4px 0; border-radius:4px;";
-            btn.innerHTML = '<div style="display:flex; align-items:center; gap:6px;"><span class="indicador-flecha" style="font-size:0.7rem; width:10px;">▼</span><span>📅 ' + meses[mesIdx] + '</span></div><span style="font-size:0.72rem; background:#3498db; color:white; padding:1px 7px; border-radius:10px;">' + lista.length + (lista.length===1?' día':' días') + '</span>';
+            btn.innerHTML = '<div style="display:flex; align-items:center; gap:6px;"><span class="indicador-flecha" style="font-size:0.7rem; width:10px;">▶</span><span>📅 ' + meses[mesIdx] + '</span></div><span style="font-size:0.72rem; background:#3498db; color:white; padding:1px 7px; border-radius:10px;">' + lista.length + (lista.length===1?' día':' días') + '</span>';
             btn.onclick = function() {
                 let t = document.getElementById(idMes);
                 let ind = this.querySelector('.indicador-flecha');
@@ -1422,9 +1422,9 @@ function recalcularBloquesHistorial() {
                 else { t.style.display = 'none'; if(ind) ind.innerText='▶'; }
             };
             panel.appendChild(btn);
-            let cont = document.createElement('div');
-            cont.id = idMes;
-            cont.style.cssText = "margin-left:14px; border-left:1px dashed #2d3748; padding-left:10px; display:block;";
+			let cont = document.createElement('div');
+			cont.id = idMes;
+			cont.style.cssText = "margin-left:14px; border-left:1px dashed #2d3748; padding-left:10px; display:none;";
             panel.appendChild(cont);
             lista.forEach(fecha => {
                 let idsR = mapeoRuta[fecha]||[], idsS = mapeoSalmos[fecha]||[], idsP = mapeoProv[fecha]||[], idsC = mapeoComp[fecha]||[];

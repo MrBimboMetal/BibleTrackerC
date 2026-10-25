@@ -2702,7 +2702,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let inputFav = document.getElementById('input-fav-versiculo');
     if (inputFav) {
         inputFav.addEventListener('keydown', function(evento) {
-            if (evento.key === 'Enter') {
+            if (evento.key === 'Enter' && (evento.ctrlKey || evento.metaKey)) {
                 evento.preventDefault();
                 agregarVersiculoFavorito();
             }

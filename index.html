@@ -1007,12 +1007,30 @@ function obtenerRangoLibroComp(id) {
 
 function clickCasilla(tipo, id) {
     let checkActual = document.getElementById('check-' + tipo + '-' + id);
+    if (!checkActual) return;
+
     let hoy = new Date().toLocaleDateString('es-ES');
+
+    // Si el checkbox quedó desmarcado → el usuario está intentando desmarcar
+    if (!checkActual.checked) {
+        const confirmar = confirm(
+            "¿Estás seguro de desmarcar este capítulo?\n\n" +
+            "Esto puede afectar tu racha de lectura y no se puede recuperar fácilmente."
+        );
+
+        if (!confirmar) {
+            // Revertir el cambio visual del checkbox
+            checkActual.checked = true;
+            return;
+        }
+    }
 
     if (tipo === 'ruta' || tipo === 'comp') {
         let rango = (tipo === 'ruta') ? obtenerRangoLibroRuta(id) : obtenerRangoLibroComp(id);
         if (!rango) return;
-        if (checkActual && checkActual.checked) {
+
+        if (checkActual.checked) {
+            // Marcar desde el punto correcto hasta el actual
             let puntoInicio = rango.start;
             for (let i = id - 1; i >= rango.start; i--) {
                 if (localStorage.getItem('biblia_v4_' + tipo + '_' + i) === 'true') {
@@ -1029,6 +1047,7 @@ function clickCasilla(tipo, id) {
                 if (row) row.classList.add('checked');
             }
         } else {
+            // Desmarcar desde el actual hasta el final del libro
             for (let i = id; i <= rango.end; i++) {
                 let box = document.getElementById('check-' + tipo + '-' + i);
                 let row = document.getElementById(tipo + '-row-' + i);
@@ -1040,7 +1059,7 @@ function clickCasilla(tipo, id) {
         }
     } else if (tipo === 'salmo') {
         let limiteMax = totalSalmos;
-        if (checkActual && checkActual.checked) {
+        if (checkActual.checked) {
             let puntoInicio = 1;
             for (let i = id - 1; i >= 1; i--) {
                 if (localStorage.getItem('biblia_v4_salmo_' + i) === 'true') {
@@ -1068,7 +1087,7 @@ function clickCasilla(tipo, id) {
         }
     } else if (tipo === 'prov') {
         let limiteMax = totalProverbios;
-        if (checkActual && checkActual.checked) {
+        if (checkActual.checked) {
             let puntoInicio = 1;
             for (let i = id - 1; i >= 1; i--) {
                 if (localStorage.getItem('biblia_v4_prov_' + i) === 'true') {
@@ -1095,6 +1114,7 @@ function clickCasilla(tipo, id) {
             }
         }
     }
+
     actualizarProgreso();
     recalcularBloquesHistorial();
     actualizarContadoresInsignias();
